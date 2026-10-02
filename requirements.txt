@@ -1,0 +1,5 @@
+# Rang project requirements index
+# Product requirements: REQUIREMENTS.md
+# Experiments / ideas: IDEATION.md
+# AI-agent development rules: AGENTS.md
+# Runtime dependencies: see package.json

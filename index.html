@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="description" content="Rang — a colourful, open-source MWeb brick breaker game.">
+    <title>Rang — Brick Breaker</title>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body>
+
+    <main id="app">
+
+        <section id="splash" class="splash active">
+            <div class="splash-mark"><span>✦</span></div>
+            <div class="splash-title">Rang</div>
+            <div class="loader"><i></i><i></i><i></i></div>
+        </section>
+
+        <section id="hud" class="hud">
+            <button id="homeBtn" class="hud-home" aria-label="Home">✦</button>
+
+            <div class="hud-pills">
+                <div class="hud-pill">
+                    <span class="label" id="levelLabel">LEVEL</span>
+                    <strong id="levelText">LEVEL 1</strong>
+                </div>
+
+                <div class="hud-pill score-pill">
+                    <span class="label" id="scoreLabel">SCORE</span>
+                    <strong id="scoreText">0</strong>
+                </div>
+
+                <div class="hud-pill">
+                    <span class="label" id="bestLabel">BEST</span>
+                    <strong id="bestText">0</strong>
+                </div>
+            </div>
+        </section>
+
+        <canvas id="game" aria-label="Rang game"></canvas>
+
+        <section id="menu" class="screen active">
+
+            <!-- Settings is now a top-right gear button -->
+            <button id="settingsBtn" type="button" aria-label="Settings">⚙</button>
+
+            <div class="brand">
+                <div class="home-art">
+                    <span class="mini-ball"></span>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                </div>
+
+                <div class="brand-mark">✦</div>
+                <h1>Rang</h1>
+                <p>Break. Bounce. Discover.</p>
+            </div>
+
+            <div class="menu-actions">
+                <button id="playBtn" class="primary">PLAY</button>
+
+                <button id="levelsBtn" class="secondary">LEVELS</button>
+
+                <div class="small-actions">
+                    <button id="likedBtn" class="text-btn">
+                        ♥ I LIKED IT
+                    </button>
+
+                    <button id="shareBtn" class="text-btn">
+                        ↗ SHARE
+                    </button>
+
+                    <button id="feedbackBtn" class="text-btn">
+                        ✎ FEEDBACK
+                    </button>
+                </div>
+
+                <button id="aboutBtn" class="text-btn about-link">
+                    ABOUT RANG
+                </button>
+            </div>
+
+            <p id="touchHint" class="hint">
+                Touch / drag to move the paddle
+            </p>
+
+            <p id="homeStatus" class="home-status"></p>
+
+            <footer class="home-strip">
+                <a id="githubLink" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+
+                <span>•</span>
+                <span>Open source · MWeb</span>
+            </footer>
+
+        </section>
+
+        <section id="levels" class="screen">
+
+            <header class="screen-head">
+                <button id="backBtn" class="icon-btn">‹</button>
+
+                <div>
+                    <h2 id="levelsTitle">Choose your level</h2>
+                    <p id="levelsSub"></p>
+                </div>
+            </header>
+
+            <div id="levelGrid" class="level-grid"></div>
+
+        </section>
+
+        <section id="about" class="screen">
+
+            <div class="about-card">
+
+                <div class="about-logo">✦</div>
+
+                <div class="result-kicker">RANG</div>
+
+                <h2 id="aboutTitle">About Rang</h2>
+
+                <p id="aboutLead">
+                    Open-source MWeb brick breaker.
+                </p>
+
+                <div class="about-points">
+
+                    <div>
+                        <b>OPEN SOURCE</b>
+                        <span>Built for community contribution.</span>
+                    </div>
+
+                    <div>
+                        <b>VIBE CODED</b>
+                        <span>Human ideas + AI-assisted development.</span>
+                    </div>
+
+                    <div>
+                        <b>MOBILE WEB</b>
+                        <span>Portrait first. Fold and flip friendly.</span>
+                    </div>
+
+                    <div>
+                        <b>NO LOGIN</b>
+                        <span>Progress stays on your device.</span>
+                    </div>
+
+                    <div>
+                        <b>SMALL & FAST</b>
+                        <span>No heavy game engine required.</span>
+                    </div>
+
+                </div>
+
+                <button id="aboutCloseBtn" class="primary">
+                    CLOSE
+                </button>
+
+            </div>
+
+        </section>
+
+        <section id="overlay" class="screen overlay-screen">
+
+            <div id="resultCard" class="result-card">
+
+                <div id="resultKicker" class="result-kicker">
+                    LEVEL CLEAR
+                </div>
+
+                <h2 id="resultTitle">
+                    Side by Side
+                </h2>
+
+                <p id="resultBody">
+                    Nice run.
+                </p>
+
+                <div class="result-actions">
+
+                    <button id="bonusBtn" class="primary" style="display:none">
+                        BONUS ROUND
+                    </button>
+
+                    <button id="nextBtn" class="primary">
+                        NEXT LEVEL
+                    </button>
+
+                    <button id="retryBtn" class="secondary">
+                        RETRY
+                    </button>
+                    
+                    <!-- Home is available from the end-game result -->
+                    <button id="resultHomeBtn" class="secondary result-home" type="button">
+                        HOME
+                    </button>
+
+                </div>
+
+
+
+            </div>
+
+        </section>
+
+        <section id="settings" class="screen">
+
+            <div class="about-card settings-card">
+
+                <div class="about-logo">⚙</div>
+
+                <div class="result-kicker">RANG</div>
+
+                <h2>Settings</h2>
+
+                <div class="setting-row">
+
+                    <div>
+                        <b data-i18n="appearance">APPEARANCE</b>
+                        <span>Light, dark or follow the device.</span>
+                    </div>
+
+                    <select id="appearanceSelect">
+                        <option value="system">System</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+
+                </div>
+
+                <div class="setting-row">
+
+                    <div>
+                        <b data-i18n="language">LANGUAGE</b>
+                        <span>Choose the language used by Rang.</span>
+                    </div>
+
+                    <select id="languageSelect">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="gu">ગુજરાતી</option>
+                        <option value="ja">日本語</option>
+                        <option value="es">Español</option>
+                    </select>
+
+                </div>
+
+                </br>
+
+                <button id="settingsCloseBtn" class="primary">
+                    CLOSE
+                </button>
+
+            </div>
+
+        </section>
+
+        <section id="pauseDialog" class="screen overlay-screen">
+
+            <div class="result-card">
+
+                <div class="result-kicker">RANG</div>
+
+                <h2 data-i18n="pausedTitle">
+                    GAME PAUSED
+                </h2>
+
+                <p data-i18n="pausedText">
+                    You paused the game. Do you want to return to Home?
+                </p>
+
+                <div class="result-actions">
+
+                    <button id="pauseStayBtn" class="primary" data-i18n="stay">
+                        STAY
+                    </button>
+
+                    <button id="pauseHomeBtn" class="secondary" data-i18n="goHome">
+                        GO HOME
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="feedback" class="screen overlay-screen">
+
+            <div class="result-card feedback-card">
+
+                <div class="result-kicker">
+                    MAKE RANG BETTER
+                </div>
+
+                <h2 id="feedbackTitle">
+                    Make Rang better
+                </h2>
+
+                <p id="feedbackCopyHint">
+                    Write a thought. Nothing is sent automatically.
+                </p>
+
+                <textarea id="feedbackText" maxlength="800"
+                    placeholder="What felt fun, confusing, slow, or just nice?"></textarea>
+
+                <div class="result-actions">
+
+                    <button id="feedbackSaveBtn" class="primary">
+                        COPY FEEDBACK
+                    </button>
+
+                    <button id="feedbackCloseBtn" class="secondary">
+                        CLOSE
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="levelLoader" class="level-loader">
+
+            <div class="loader-orbit">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div id="levelLoaderTitle">
+                Loading level
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="src/env.js"></script>
+    <script src="src/main.js"></script>
+
+</body>
+
+</html>

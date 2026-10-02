@@ -1,0 +1,17 @@
+{
+  "name": "rang-brick-breaker",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Rang — mobile-web-first brick breaker",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "node --check src/main.js"
+  },
+  "devDependencies": {
+    "vite": "^7.1.7",
+    "typescript": "^5.9.2"
+  }
+}
