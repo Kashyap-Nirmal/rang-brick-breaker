@@ -12,7 +12,7 @@ import {
 
 const utcContext = { timezone: "UTC" };
 
-test("theme reset clears only theme preferences once per build when enabled", () => {
+test("theme reset clears only theme preferences once per reset version", () => {
   const values = new Map([
     ...THEME_PREFERENCE_KEYS.map((key) => [key, "saved-theme-value"]),
     ["rang.best.v015", "250"],
@@ -31,20 +31,20 @@ test("theme reset clears only theme preferences once per build when enabled", ()
     },
   };
 
-  assert.equal(resetThemePreferencesForBuild(storage, "bundle-a", false), false);
+  assert.equal(resetThemePreferencesForBuild(storage, null), false);
   assert.equal(values.get("rang.timeTheme"), "saved-theme-value");
-  assert.equal(resetThemePreferencesForBuild(storage, "bundle-a", true), true);
-  assert.equal(resetThemePreferencesForBuild(storage, "bundle-a", true), false);
-  assert.equal(values.get("rang.themeResetBuild"), "bundle-a");
+  assert.equal(resetThemePreferencesForBuild(storage, "reset-a"), true);
+  assert.equal(resetThemePreferencesForBuild(storage, "reset-a"), false);
+  assert.equal(values.get("rang.themeResetBuild"), "reset-a");
   for (const key of THEME_PREFERENCE_KEYS) assert.equal(values.has(key), false);
   assert.equal(values.get("rang.best.v015"), "250");
   assert.equal(values.get("rang.language"), "es");
   assert.equal(values.get("rang.soundEnabled"), "false");
 
   values.set("rang.timeTheme", "night");
-  assert.equal(resetThemePreferencesForBuild(storage, "bundle-a", true), false);
+  assert.equal(resetThemePreferencesForBuild(storage, "reset-a"), false);
   assert.equal(values.get("rang.timeTheme"), "night");
-  assert.equal(resetThemePreferencesForBuild(storage, "bundle-b", true), true);
+  assert.equal(resetThemePreferencesForBuild(storage, "reset-b"), true);
   assert.equal(values.has("rang.timeTheme"), false);
 });
 

@@ -8,14 +8,14 @@ export const THEME_PREFERENCE_KEYS = [
 const HOUR_MS = 60 * 60 * 1000;
 const MINUTE_MS = 60 * 1000;
 
-export function resetThemePreferencesForBuild(storage, buildId, enabled) {
-  if (!enabled || !buildId) return false;
+export function resetThemePreferencesForBuild(storage, resetVersion) {
+  if (!resetVersion) return false;
 
   const markerKey = "rang.themeResetBuild";
-  if (storage.getItem(markerKey) === buildId) return false;
+  if (storage.getItem(markerKey) === resetVersion) return false;
 
   for (const key of THEME_PREFERENCE_KEYS) storage.removeItem(key);
-  storage.setItem(markerKey, buildId);
+  storage.setItem(markerKey, resetVersion);
   return true;
 }
 

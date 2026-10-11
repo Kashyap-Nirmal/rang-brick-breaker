@@ -84,16 +84,13 @@ the selected/manual theme mode are persisted locally.
 ### Theme development and testing
 
 - Theme palettes and token application live in `src/adaptive-theme.js`.
-- To reset saved theme choices on the next published frontend build, set the
-  build environment variable `VITE_RESET_THEME_PREFERENCES=true`. The reset
-  happens once per generated JavaScript bundle, so refreshes do not keep
-  overriding choices a player makes afterward. It clears only appearance,
-  automatic/manual time theme, and nature-accent preferences; score, unlocked
-  levels, language, sound, and other saved data are preserved. Disable the
-  variable after the rollout if you do not want later deploys to reset themes.
-- The reset runs only after the browser receives the new JavaScript bundle.
-  Configure the static host/CDN to revalidate `index.html` on visits; hashed
-  files under `assets/` can remain cached as immutable assets.
+- `src/env.js` contains a one-time theme-preference reset version that works
+  with GitHub Pages serving source files directly. It clears only appearance,
+  automatic/manual time theme, and nature-accent preferences; score, unlocks,
+  language, sound, and other saved data are preserved. Increment that reset
+  version only when a release should clear saved theme choices again. When
+  publishing source files directly, bump the `v` query revision in `index.html`
+  and the matching theme imports in `src/main.js` to bypass cached assets.
 - IPWHO validation, timeout, and request memoization live in `src/ip-context.js`.
 - `src/main.js` initializes immediately with the system timezone, uses already
   permitted device location first, falls back to IPWHO, and manages

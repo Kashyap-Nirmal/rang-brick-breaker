@@ -5,9 +5,9 @@ import {
   resolveAdaptiveTheme,
   resolveTimezone,
   THEME_NAMES,
-} from "./adaptive-theme.js";
+} from "./adaptive-theme.js?v=20261011-theme-reset";
 import { getDeviceLocationContext, getIpContext } from "./ip-context.js";
-import { ENV } from "./env.js";
+import { ENV } from "./env.js?v=20261011-theme-reset";
 
 (() => {
   "use strict";
@@ -1993,8 +1993,7 @@ import { ENV } from "./env.js";
   const root = document.documentElement;
   resetThemePreferencesForBuild(
     localStorage,
-    import.meta.url,
-    import.meta.env?.VITE_RESET_THEME_PREFERENCES === "true",
+    ENV.THEME_PREFERENCES_RESET_VERSION,
   );
   let savedAppearance = localStorage.getItem("rang.appearance") || "system";
   autoTimeTheme = $("autoTimeTheme");
