@@ -85,6 +85,8 @@
 
 - [R] Some later gameplay can award bonus rounds.
 - [R] A bonus round is earned when the player crosses the previous personal best **and** completes the same normal level.
+- [R] Award at most one bonus round per run, after the level in which the
+  previous personal best was crossed is completed.
 - [R] If the player fails that level, the bonus is not awarded.
 - [R] Bonus rounds provide three allowed respawns.
 - [R] Bonus rounds should have their own name and visual identity; they should not be called “Rang 1”, “Rang 2”, etc.

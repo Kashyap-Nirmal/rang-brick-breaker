@@ -8,6 +8,7 @@ import {
 } from "./adaptive-theme.js?v=20261011-theme-reset";
 import { getDeviceLocationContext, getIpContext } from "./ip-context.js";
 import { ENV } from "./env.js?v=20261011-theme-reset";
+import { shouldOfferBonusRound } from "./progression.js";
 
 (() => {
   "use strict";
@@ -515,6 +516,7 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     bonusRespawns: 3,
     bonusReward: 0,
     previousLevel: 1,
+    bonusRoundUsed: false,
   };
 
   const t = (k) => (I18N[lang] || I18N.en)[k] || I18N.en[k] || k;
@@ -537,7 +539,9 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     $("aboutTitle").textContent = t("aboutTitle");
     $("feedbackTitle").textContent = t("feedbackTitle");
     $("feedbackSaveBtn").textContent = t("copy");
-    $("feedbackCloseBtn").textContent = t("close");
+    $("feedbackCloseBtn").textContent = "×";
+    $("feedbackCloseBtn").setAttribute("aria-label", t("close"));
+    $("feedbackCloseBtn").title = t("close");
     $("githubLink").textContent = t("github");
     $("githubLink").href =
       `https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`;
@@ -545,7 +549,9 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     $("scoreLabel").textContent = t("score");
     $("bestLabel").textContent = t("best");
     $("homeBtn").setAttribute("aria-label", t("home"));
-    $("aboutCloseBtn").textContent = t("close");
+    $("aboutCloseBtn").textContent = "×";
+    $("aboutCloseBtn").setAttribute("aria-label", t("close"));
+    $("aboutCloseBtn").title = t("close");
     $("feedbackCopyHint").textContent = t("write");
 
     if ($("settingsBtn")) {
@@ -864,12 +870,14 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     c.fill();
   }
 
-  async function start(level) {
-    const newRun = level === 1;
+  async function start(level, continueRun = false) {
     S.mode = "normal";
     S.level = Math.max(1, Math.min(LEVELS.length, level));
-    if (newRun) S.score = 0;
-    S.bestCrossed = false;
+    if (!continueRun) {
+      S.score = 0;
+      S.bestCrossed = false;
+      S.bonusRoundUsed = false;
+    }
     S.running = false;
     S.particles = [];
     S.floaters = [];
@@ -1108,7 +1116,7 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     S.score += 0;
     S.bonusRespawns = 3;
     S.bonusReward = 0;
-    S.bestCrossed = false;
+    S.bonusRoundUsed = true;
     S.particles = [];
     S.floaters = [];
     S.fireHits = 0;
@@ -1378,7 +1386,10 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     beep(720, 0.08, "sine");
     setTimeout(() => beep(920, 0.11, "sine"), 70);
 
-    const eligible = S.bestCrossed;
+    const eligible = shouldOfferBonusRound(
+      S.bestCrossed,
+      S.bonusRoundUsed,
+    );
 
     $("resultCard")?.classList.remove("single-action");
 
@@ -1402,7 +1413,8 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     $("resultHomeBtn").style.display = "block";
 
     $("nextBtn").onclick = () => {
-      start(S.level < LEVELS.length ? S.level + 1 : 1);
+      if (S.level < LEVELS.length) start(S.level + 1, true);
+      else start(1);
     };
 
     show("overlay");
@@ -1449,7 +1461,8 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     $("nextBtn").textContent = t("next");
 
     $("nextBtn").onclick = () => {
-      start(S.previousLevel < LEVELS.length ? S.previousLevel + 1 : 1);
+      if (S.previousLevel < LEVELS.length) start(S.previousLevel + 1, true);
+      else start(1);
     };
 
     $("retryBtn").textContent = t("retry");
@@ -1486,7 +1499,8 @@ import { ENV } from "./env.js?v=20261011-theme-reset";
     $("nextBtn").textContent = t("next");
 
     $("nextBtn").onclick = () => {
-      start(S.previousLevel < LEVELS.length ? S.previousLevel + 1 : 1);
+      if (S.previousLevel < LEVELS.length) start(S.previousLevel + 1, true);
+      else start(1);
     };
 
     $("retryBtn").textContent = t("retry");
