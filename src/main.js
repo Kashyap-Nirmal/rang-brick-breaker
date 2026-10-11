@@ -1994,7 +1994,7 @@ import { ENV } from "./env.js";
   resetThemePreferencesForBuild(
     localStorage,
     import.meta.url,
-    import.meta.env.VITE_RESET_THEME_PREFERENCES === "true",
+    import.meta.env?.VITE_RESET_THEME_PREFERENCES === "true",
   );
   let savedAppearance = localStorage.getItem("rang.appearance") || "system";
   autoTimeTheme = $("autoTimeTheme");
