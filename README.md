@@ -40,6 +40,71 @@ npm run build
 
 The game itself has no backend dependency and can be hosted as a static site.
 
+## Adaptive themes
+
+Rang automatically selects a Morning, Afternoon, Evening, or Night palette from
+the current time in the best available timezone. It uses local clock bands as a
+fallback and, when approximate coordinates are available, estimates sunrise and
+sunset locally to refine the morning and evening transitions. Solar estimates
+are intentionally lightweight; polar day/night and unusually short or long
+daylight fall back to the clock bands.
+
+Open **Settings → Personalise your Rang** to choose a theme manually. A manual
+choice pauses automatic switching and is saved on this device. Turn on
+**Automatic theme** to recalculate immediately and resume time-based changes.
+The existing System/Light/Dark appearance choice remains available. In System
+mode, morning and afternoon use bright daylight palettes, while night uses a
+dark palette; explicitly choosing Light or Dark overrides that contrast choice.
+All time palettes are blue-dominant with no green accents, and use distinct
+ambient tints so the active time theme is visible. Sunrise and sunset may use
+restrained warm highlights.
+The canvas also paints a restrained time-of-day sky: a clock-positioned sun,
+drifting blue-white clouds, and migrating bird flocks by day; a crescent moon,
+twinkling stars, and occasional shooting stars at night. The scene animates
+behind the menu and gameplay, pauses while the page is hidden, and becomes
+static when reduced motion is requested.
+
+On startup, Rang renders immediately using the browser's system timezone and
+system light/dark preference. The system timezone always takes priority.
+Approximate device coordinates are used for sunrise/sunset only when the player
+has already granted location permission; Rang never prompts for it. If device
+location is denied, unavailable, or cannot be read, Rang makes one best-effort
+IPWHO request for approximate timezone and coordinates/country (2.2-second
+timeout). IPWHO's timezone is used only if the system timezone cannot be
+identified; browser-local time is the final fallback. The game remains playable
+offline if the optional lookup fails.
+
+When device location is not available, the IPWHO request sends a network
+request to a third-party service, which may process the requester's public IP
+address. Rang does not claim the request is anonymous. IP-derived timezone,
+coordinates, and country remain in memory only; they are not written to local
+storage, cookies, analytics, or logs. Only explicit user preferences such as
+the selected/manual theme mode are persisted locally.
+
+### Theme development and testing
+
+- Theme palettes and token application live in `src/adaptive-theme.js`.
+- To reset saved theme choices on the next published frontend build, set the
+  build environment variable `VITE_RESET_THEME_PREFERENCES=true`. The reset
+  happens once per generated JavaScript bundle, so refreshes do not keep
+  overriding choices a player makes afterward. It clears only appearance,
+  automatic/manual time theme, and nature-accent preferences; score, unlocked
+  levels, language, sound, and other saved data are preserved. Disable the
+  variable after the rollout if you do not want later deploys to reset themes.
+- The reset runs only after the browser receives the new JavaScript bundle.
+  Configure the static host/CDN to revalidate `index.html` on visits; hashed
+  files under `assets/` can remain cached as immutable assets.
+- IPWHO validation, timeout, and request memoization live in `src/ip-context.js`.
+- `src/main.js` initializes immediately with the system timezone, uses already
+  permitted device location first, falls back to IPWHO, and manages
+  visibility/minute-boundary updates without restarting gameplay.
+- The solar approximation uses the NOAA sunrise equation. It is not intended
+  for astronomical precision; missing or unusable events fall back to the
+  four local-time bands.
+- Run `npm test` for deterministic timezone, band-boundary, solar, response
+  validation, failure, and timeout tests. Tests make no network requests.
+- Run `npm run check` and `npm run build` for syntax and production checks.
+
 
 ## v0.1.5 focus
 

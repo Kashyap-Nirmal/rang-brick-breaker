@@ -34,13 +34,31 @@
 
 ## Themes and visual accessibility
 
-- [R] Support system light and dark themes.
+- [R] Support distinct Morning, Afternoon, Evening, and Night themes, selected
+  automatically from local time by default.
+- [R] Keep time-theme palettes blue-dominant, without green accents; restrained
+  warm celestial highlights may distinguish sunrise and sunset.
+- [R] Use the system timezone first; use a valid IP-derived timezone only when
+  the system timezone cannot be identified, then use browser-local time.
+- [R] Use valid approximate coordinates to refine sunrise/sunset transitions
+  from device location only when permission is already granted, otherwise use
+  approximate IP-derived coordinates; fall back to local-time bands when solar
+  calculations fail. Never prompt for browser location permission.
+- [R] Allow a persisted manual theme selection and an immediate return to
+  automatic mode.
+- [R] Keep the existing System/Light/Dark appearance control and maintain
+  readable contrast in every time theme and appearance mode.
+- [R] Show an ambient sky that matches the selected time theme: a clock-positioned
+  sun, drifting clouds and migrating birds by day; a moon, stars, and occasional
+  shooting stars at night. Keep it visible behind the menu and gameplay.
+- [R] Pause background animation while the page is hidden.
 - [R] Text and controls must maintain strong contrast in both themes.
 - [R] The game must not depend on the user's system font being a particular font.
 - [R] System/browser zoom must not break the intended game layout or collision coordinate system.
 - [R] Avoid UI scaling assumptions tied to one phone size.
 - [R] Respect safe-area insets where available.
-- [R] Reduced-motion preferences should be respected where practical.
+- [R] Respect reduced-motion preferences for non-essential animation,
+  including the ambient sky.
 
 ## Level progression
 
@@ -97,7 +115,19 @@ The game should support a small vocabulary of special tile effects. Individual e
 
 - [R] No login is required for the core game.
 - [R] Progress, best score, unlocks, and simple preferences can be stored locally on the device/browser.
+- [R] An opt-in publish-time reset may clear only saved theme preferences once
+  per new frontend bundle; it must preserve scores, unlocks, language, sound,
+  and other local data. The reset is disabled unless explicitly enabled for
+  that build.
 - [R] Core gameplay should not require a backend.
+- [R] Adaptive themes may make one best-effort request to IPWHO for approximate
+  timezone and geographic context when device location is unavailable, denied,
+  or system timezone identification fails.
+- [R] Clearly disclose that IPWHO is a third party that may process the
+  requester's public IP address.
+- [R] Keep IP-derived context in memory only; do not persist it, log it, or send
+  it to analytics. Continue using the system timezone/local clock if lookup
+  fails or times out.
 
 ## Community
 

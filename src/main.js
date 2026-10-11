@@ -1,3 +1,14 @@
+import {
+  applyThemePalette,
+  getLocalClockParts,
+  resetThemePreferencesForBuild,
+  resolveAdaptiveTheme,
+  resolveTimezone,
+  THEME_NAMES,
+} from "./adaptive-theme.js";
+import { getDeviceLocationContext, getIpContext } from "./ip-context.js";
+import { ENV } from "./env.js";
+
 (() => {
   "use strict";
 
@@ -62,15 +73,15 @@
   ];
 
   const TILE_COLORS = [
-    "#ff5d73",
-    "#ff9f43",
-    "#ffd43b",
-    "#35c978",
-    "#22c7a7",
-    "#35bdf5",
-    "#4d7cff",
-    "#9b63ff",
-    "#f05bd8",
+    "#2572c9",
+    "#2d80dc",
+    "#368fe9",
+    "#429df2",
+    "#52aaf5",
+    "#3d8cde",
+    "#5aa7eb",
+    "#73b8f2",
+    "#91c9f5",
   ];
   const I18N = {
     en: {
@@ -113,8 +124,33 @@
       feedbackFallback:
         "Feedback could not be submitted. It was copied instead.",
       settings: "SETTINGS",
+      settingsTitle: "Settings",
+      settingsDescription: "Make the game feel right for you.",
+      personaliseTitle: "Personalise your Rang",
+      personaliseDescription: "Themes, language and sound",
       appearance: "APPEARANCE",
+      baseAppearance: "Base appearance",
+      appearanceDescription: "Follow your device or choose a fixed mode.",
       language: "LANGUAGE",
+      languageDescription: "Choose your preferred language.",
+      timeThemeTitle: "TIME-OF-DAY THEME",
+      morning: "Morning",
+      afternoon: "Afternoon",
+      evening: "Evening",
+      night: "Night",
+      morningDescription: "Fresh and airy",
+      afternoonDescription: "Bright and clear",
+      eveningDescription: "Warm and soft",
+      nightDescription: "Quiet and deep",
+      automaticTheme: "Automatic theme",
+      automaticThemeDescription:
+        "Follow local time, timezone and available daylight context.",
+      natureTitle: "Nature accents",
+      natureDescription: "Optional decorative colour variations.",
+      soundTitle: "Game sound effects",
+      soundDescription: "Enable or mute the game's sound effects.",
+      themePrivacy:
+        "Rang uses your system time zone and only uses device location if permission is already granted. If location is unavailable, it falls back to IPWHO, which may process your public IP. Nothing location-derived is saved.",
       system: "SYSTEM",
       light: "LIGHT",
       dark: "DARK",
@@ -163,8 +199,33 @@
       feedbackSent: "धन्यवाद! आपका फीडबैक सबमिट किया गया।",
       feedbackFallback: "फीडबैक सबमिट नहीं हो सका। इसे कॉपी कर दिया गया है।",
       settings: "सेटिंग्स",
+      settingsTitle: "सेटिंग्स",
+      settingsDescription: "खेल को अपनी पसंद के अनुसार बनाएं।",
+      personaliseTitle: "अपने Rang को पसंद के अनुसार बनाएं",
+      personaliseDescription: "थीम, भाषा और ध्वनि",
       appearance: "दिखावट",
+      baseAppearance: "मूल दिखावट",
+      appearanceDescription: "डिवाइस का पालन करें या एक मोड चुनें।",
       language: "भाषा",
+      languageDescription: "अपनी पसंदीदा भाषा चुनें।",
+      timeThemeTitle: "दिन के समय की थीम",
+      morning: "सुबह",
+      afternoon: "दोपहर",
+      evening: "शाम",
+      night: "रात",
+      morningDescription: "ताज़ा और हल्की",
+      afternoonDescription: "उज्ज्वल और साफ़",
+      eveningDescription: "गर्म और कोमल",
+      nightDescription: "शांत और गहरी",
+      automaticTheme: "स्वचालित थीम",
+      automaticThemeDescription:
+        "स्थानीय समय, समय-क्षेत्र और उपलब्ध दिन के प्रकाश के अनुसार।",
+      natureTitle: "प्रकृति के रंग",
+      natureDescription: "वैकल्पिक सजावटी रंग बदलाव।",
+      soundTitle: "गेम ध्वनि प्रभाव",
+      soundDescription: "गेम की ध्वनियां चालू या म्यूट करें।",
+      themePrivacy:
+        "Rang आपके सिस्टम समय-क्षेत्र का उपयोग करता है और डिवाइस स्थान तभी लेता है जब अनुमति पहले से मिली हो। स्थान उपलब्ध न हो तो IPWHO आपके सार्वजनिक IP को संसाधित कर सकता है। स्थान की जानकारी सहेजी नहीं जाती।",
       system: "सिस्टम",
       light: "लाइट",
       dark: "डार्क",
@@ -214,8 +275,33 @@
       feedbackFallback:
         "પ્રતિસાદ સબમિટ થઈ શક્યો નહીં. તેને કૉપી કરવામાં આવ્યો છે.",
       settings: "સેટિંગ્સ",
+      settingsTitle: "સેટિંગ્સ",
+      settingsDescription: "રમતને તમારી પસંદ પ્રમાણે બનાવો.",
+      personaliseTitle: "તમારા Rang ને વ્યક્તિગત બનાવો",
+      personaliseDescription: "થીમ, ભાષા અને અવાજ",
       appearance: "દેખાવ",
+      baseAppearance: "મૂળ દેખાવ",
+      appearanceDescription: "ઉપકરણને અનુસરો અથવા એક મોડ પસંદ કરો.",
       language: "ભાષા",
+      languageDescription: "તમારી પસંદગીની ભાષા પસંદ કરો.",
+      timeThemeTitle: "દિવસના સમયની થીમ",
+      morning: "સવાર",
+      afternoon: "બપોર",
+      evening: "સાંજ",
+      night: "રાત",
+      morningDescription: "તાજી અને હળવી",
+      afternoonDescription: "ઉજળી અને સ્પષ્ટ",
+      eveningDescription: "ગરમ અને સૌમ્ય",
+      nightDescription: "શાંત અને ઘેરી",
+      automaticTheme: "આપમેળે થીમ",
+      automaticThemeDescription:
+        "સ્થાનિક સમય, સમયક્ષેત્ર અને ઉપલબ્ધ દિવસના પ્રકાશને અનુસરે.",
+      natureTitle: "કુદરતી રંગો",
+      natureDescription: "વૈકલ્પિક શણગારના રંગ ફેરફારો.",
+      soundTitle: "ગેમના અવાજ",
+      soundDescription: "ગેમના અવાજ ચાલુ અથવા બંધ કરો.",
+      themePrivacy:
+        "Rang તમારા સિસ્ટમ સમયક્ષેત્રનો ઉપયોગ કરે છે અને મંજૂરી પહેલેથી હોય ત્યારે જ ઉપકરણનું સ્થાન લે છે. સ્થાન ઉપલબ્ધ ન હોય તો IPWHO તમારા જાહેર IP પર પ્રક્રિયા કરી શકે છે. સ્થાનની માહિતી સાચવાતી નથી.",
       system: "સિસ્ટમ",
       light: "લાઇટ",
       dark: "ડાર્ક",
@@ -264,8 +350,33 @@
       feedbackSent: "ありがとう！フィードバックを送信しました。",
       feedbackFallback: "送信できませんでした。コピーしました。",
       settings: "設定",
+      settingsTitle: "設定",
+      settingsDescription: "自分に合ったゲームに調整できます。",
+      personaliseTitle: "Rangをカスタマイズ",
+      personaliseDescription: "テーマ、言語、サウンド",
       appearance: "外観",
+      baseAppearance: "基本の外観",
+      appearanceDescription: "端末に合わせるか、固定モードを選びます。",
       language: "言語",
+      languageDescription: "使用する言語を選びます。",
+      timeThemeTitle: "時間帯のテーマ",
+      morning: "朝",
+      afternoon: "午後",
+      evening: "夕方",
+      night: "夜",
+      morningDescription: "爽やかで軽やか",
+      afternoonDescription: "明るくすっきり",
+      eveningDescription: "暖かく穏やか",
+      nightDescription: "静かで深みのある",
+      automaticTheme: "テーマを自動選択",
+      automaticThemeDescription:
+        "現地時刻、タイムゾーン、利用可能な日照情報に合わせます。",
+      natureTitle: "自然のアクセント",
+      natureDescription: "任意の装飾的な色の変化です。",
+      soundTitle: "ゲームの効果音",
+      soundDescription: "ゲームの効果音をオンまたはミュートします。",
+      themePrivacy:
+        "Rangはシステムのタイムゾーンを使い、許可済みの場合のみ端末の位置情報を利用します。位置情報が使えない場合、IPWHOが公開IPを処理することがあります。位置情報は保存されません。",
       system: "システム",
       light: "ライト",
       dark: "ダーク",
@@ -314,8 +425,33 @@
       feedbackSent: "¡Gracias! Tu opinión fue enviada.",
       feedbackFallback: "No se pudo enviar. La opinión fue copiada.",
       settings: "AJUSTES",
+      settingsTitle: "Ajustes",
+      settingsDescription: "Adapta el juego a tu gusto.",
+      personaliseTitle: "Personaliza tu Rang",
+      personaliseDescription: "Temas, idioma y sonido",
       appearance: "APARIENCIA",
+      baseAppearance: "Apariencia base",
+      appearanceDescription: "Sigue tu dispositivo o elige un modo fijo.",
       language: "IDIOMA",
+      languageDescription: "Elige tu idioma preferido.",
+      timeThemeTitle: "TEMA SEGÚN LA HORA",
+      morning: "Mañana",
+      afternoon: "Tarde",
+      evening: "Atardecer",
+      night: "Noche",
+      morningDescription: "Fresco y ligero",
+      afternoonDescription: "Claro y luminoso",
+      eveningDescription: "Cálido y suave",
+      nightDescription: "Tranquilo y profundo",
+      automaticTheme: "Tema automático",
+      automaticThemeDescription:
+        "Sigue la hora local, la zona horaria y la luz diurna disponible.",
+      natureTitle: "Detalles naturales",
+      natureDescription: "Variaciones decorativas de color opcionales.",
+      soundTitle: "Efectos de sonido",
+      soundDescription: "Activa o silencia los sonidos del juego.",
+      themePrivacy:
+        "Rang usa la zona horaria del sistema y solo accede a la ubicación del dispositivo si ya tiene permiso. Si no está disponible, IPWHO puede procesar tu IP pública. Los datos de ubicación no se guardan.",
       system: "SISTEMA",
       light: "CLARO",
       dark: "OSCURO",
@@ -332,6 +468,12 @@
   };
 
   let lang = "en";
+  let ipContext = null;
+  let activePalette = null;
+  let autoTimeTheme = null;
+  const reduceSkyMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let skyClockParts = getLocalClockParts();
+  let skyClockUpdatedAt = Date.now();
   let W = 1,
     H = 1,
     DPR = 1,
@@ -377,12 +519,12 @@
 
   const t = (k) => (I18N[lang] || I18N.en)[k] || I18N.en[k] || k;
   function isDark() {
-    const f = document.documentElement.dataset.forcedTheme;
-    if (f === "dark") return true;
-    if (f === "light") return false;
-    return matchMedia("(prefers-color-scheme: dark)").matches;
+    return activePalette?.dark || false;
   }
   function setText() {
+    document.querySelectorAll("[data-i18n]").forEach((element) => {
+      element.textContent = t(element.dataset.i18n);
+    });
     $("playBtn").textContent = t("play");
     $("levelsBtn").textContent = t("levels");
     $("aboutBtn").textContent = t("about");
@@ -410,6 +552,12 @@
       $("settingsBtn").setAttribute("aria-label", t("settings"));
       $("settingsBtn").textContent = "⚙";
     }
+    $("themeOptions").setAttribute("aria-label", t("timeThemeTitle"));
+    $("settingsCloseBtn").setAttribute("aria-label", t("close"));
+    $("settingsCloseBtn").title = t("close");
+    $("autoTimeTheme").setAttribute("aria-label", t("automaticTheme"));
+    $("natureAccent").setAttribute("aria-label", t("natureTitle"));
+    $("soundEnabled").setAttribute("aria-label", t("soundTitle"));
 
     $("resultHomeBtn").onclick = () => {
       S.running = false;
@@ -419,7 +567,7 @@
 
     updateHud();
   }
-  async function detectLanguage() {
+  async function detectLanguage(contextRequest) {
     const saved = localStorage.getItem("rang.language");
     const browser = (navigator.language || "en").toLowerCase();
     if (saved && I18N[saved]) {
@@ -427,32 +575,27 @@
       setText();
       return;
     }
+
     if (browser.startsWith("hi")) lang = "hi";
     else if (browser.startsWith("gu")) lang = "gu";
     else if (browser.startsWith("ja")) lang = "ja";
     else if (browser.startsWith("es")) lang = "es";
     else lang = "en";
     setText();
-    try {
-      const c = new AbortController();
-      setTimeout(() => c.abort(), 1200);
-      const r = await fetch("https://ipapi.co/json/", {
-        signal: c.signal,
-        cache: "no-store",
-      });
-      if (r.ok) {
-        const d = await r.json();
-        const country = (d.country_code || "").toUpperCase();
-        if (country === "JP") lang = "ja";
-        else if (country === "ES" || country === "MX" || country === "AR")
-          lang = "es";
-        else if (country === "IN" && browser.startsWith("gu")) lang = "gu";
-        else if (country === "IN" && browser.startsWith("hi")) lang = "hi";
-        setText();
-      }
-    } catch (_) {
-      /* browser language is the safe fallback */
-    }
+    const context = await contextRequest;
+    const country = (context?.country || "").toUpperCase();
+    if (country === "JP") lang = "ja";
+    else if (country === "ES" || country === "MX" || country === "AR")
+      lang = "es";
+    else if (country === "IN" && browser.startsWith("gu")) lang = "gu";
+    else if (country === "IN" && browser.startsWith("hi")) lang = "hi";
+    setText();
+  }
+
+  async function getPreferredThemeContext() {
+    const deviceLocation = await getDeviceLocationContext();
+    if (deviceLocation && resolveTimezone()) return deviceLocation;
+    return getIpContext();
   }
 
   function show(id) {
@@ -507,9 +650,10 @@
   addEventListener("orientationchange", () => setTimeout(resize, 60), {
     passive: true,
   });
-  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () =>
-    draw(),
-  );
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => {
+    updatePalette();
+    draw();
+  });
 
   $("playBtn").onclick = () => start(1);
   $("levelsBtn").onclick = renderLevels;
@@ -617,7 +761,7 @@
   function levelName(n) {
     return LEVELS[n - 1]?.name || `Level ${n}`;
   }
-  function renderLevels() {
+  function renderLevels(showScreen = true) {
     const grid = $("levelGrid");
     grid.textContent = "";
     LEVELS.forEach((v, i) => {
@@ -650,7 +794,7 @@
       b.onclick = () => start(n);
       grid.append(b);
     });
-    show("levels");
+    if (showScreen) show("levels");
   }
   function drawPreview(canvasEl, shape, n) {
     const w = canvasEl.clientWidth || 280,
@@ -1387,28 +1531,302 @@
       });
   }
 
+  function drawCloud(x, y, scale, opacity, cloudColor, shadowColor) {
+    ctx.save();
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = shadowColor;
+    ctx.beginPath();
+    ctx.ellipse(x, y + 5 * scale, 45 * scale, 10 * scale, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = cloudColor;
+    ctx.beginPath();
+    ctx.moveTo(x - 48 * scale, y + 8 * scale);
+    ctx.bezierCurveTo(
+      x - 58 * scale,
+      y - 5 * scale,
+      x - 42 * scale,
+      y - 18 * scale,
+      x - 27 * scale,
+      y - 14 * scale,
+    );
+    ctx.bezierCurveTo(
+      x - 18 * scale,
+      y - 39 * scale,
+      x + 14 * scale,
+      y - 39 * scale,
+      x + 24 * scale,
+      y - 14 * scale,
+    );
+    ctx.bezierCurveTo(
+      x + 45 * scale,
+      y - 21 * scale,
+      x + 59 * scale,
+      y - 2 * scale,
+      x + 49 * scale,
+      y + 9 * scale,
+    );
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawBird(x, y, scale, flap, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(-9, 1);
+    ctx.quadraticCurveTo(-5, -5 - flap, 0, 0);
+    ctx.quadraticCurveTo(5, -5 - flap, 9, 1);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawBirdFlocks(theme, timeSeconds, birdColor) {
+    if (theme === "night") return;
+
+    const flocks =
+      theme === "morning"
+        ? [
+            { count: 5, speed: 0.035, y: 0.34, phase: 0.05 },
+            { count: 4, speed: 0.027, y: 0.43, phase: 0.47 },
+            { count: 4, speed: 0.031, y: 0.27, phase: 0.79 },
+          ]
+        : theme === "afternoon"
+          ? [{ count: 3, speed: 0.014, y: 0.35, phase: 0.24 }]
+          : [{ count: 5, speed: 0.019, y: 0.4, phase: 0.12 }];
+
+    for (const flock of flocks) {
+      const progress = (timeSeconds * flock.speed + flock.phase) % 1.35;
+      const inbound = theme === "evening";
+      const travel = progress - 0.15;
+      const x = inbound ? (1.15 - travel) * W : travel * W;
+      const scale = inbound
+        ? 0.46 + Math.max(0, progress) * 0.32
+        : 0.78 - Math.max(0, progress) * 0.3;
+      const y = H * flock.y + (inbound ? progress * 13 : -progress * 19);
+      const spacing = inbound ? 16 : 14;
+
+      for (let index = 0; index < flock.count; index++) {
+        const formation = index === 0 ? 0 : Math.ceil(index / 2);
+        const side = index === 0 ? 0 : index % 2 ? -1 : 1;
+        drawBird(
+          x + side * formation * spacing * scale,
+          y + formation * 7 * scale,
+          scale,
+          Math.sin(timeSeconds * 7 + index + flock.phase) * 3.5,
+          birdColor,
+        );
+      }
+    }
+  }
+
+  function drawNightSky(timeSeconds, moonColor, starColor) {
+    const moonX = W * 0.78;
+    const moonY = H * 0.17;
+    const moonRadius = Math.min(35, W * 0.085);
+
+    const moonGlow = ctx.createRadialGradient(
+      moonX,
+      moonY,
+      moonRadius * 0.3,
+      moonX,
+      moonY,
+      moonRadius * 3.5,
+    );
+    moonGlow.addColorStop(0, "rgba(160, 193, 255, .24)");
+    moonGlow.addColorStop(1, "rgba(160, 193, 255, 0)");
+    ctx.fillStyle = moonGlow;
+    ctx.fillRect(
+      moonX - moonRadius * 4,
+      moonY - moonRadius * 4,
+      moonRadius * 8,
+      moonRadius * 8,
+    );
+
+    ctx.fillStyle = moonColor;
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = activePalette["--canvas-top"];
+    ctx.beginPath();
+    ctx.arc(
+      moonX + moonRadius * 0.46,
+      moonY - moonRadius * 0.27,
+      moonRadius * 0.88,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+
+    for (let index = 0; index < 56; index++) {
+      const x = ((index * 137.508) % 997) / 997 * W;
+      const y = ((index * 73.71 + 21) % 491) / 491 * H * 0.62;
+      const radius = index % 11 === 0 ? 1.8 : 0.7 + (index % 3) * 0.35;
+      const twinkle = 0.42 + 0.48 * (0.5 + 0.5 * Math.sin(timeSeconds * 1.7 + index));
+
+      ctx.globalAlpha = twinkle;
+      ctx.fillStyle = starColor;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+      if (index % 11 === 0) {
+        ctx.globalAlpha = twinkle * 0.7;
+        ctx.fillRect(x - 0.5, y - 4, 1, 8);
+        ctx.fillRect(x - 4, y - 0.5, 8, 1);
+      }
+    }
+
+    const shootingPhase = (timeSeconds % 17) / 17;
+    if (shootingPhase < 0.09) {
+      const progress = shootingPhase / 0.09;
+      const startX = W * (0.2 + ((Math.floor(timeSeconds / 17) * 0.37) % 0.58));
+      const startY = H * 0.12;
+      const endX = startX + progress * W * 0.16;
+      const endY = startY + progress * H * 0.11;
+      const trail = ctx.createLinearGradient(startX, startY, endX, endY);
+      trail.addColorStop(0, "rgba(255,255,255,0)");
+      trail.addColorStop(1, "rgba(226,239,255,.95)");
+      ctx.globalAlpha = Math.sin((progress / 0.09) * Math.PI);
+      ctx.strokeStyle = trail;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawDaySky(theme, timeSeconds, sunColor, sunGlow, cloudColor, cloudShadow, birdColor) {
+    const now = Date.now();
+    if (now - skyClockUpdatedAt >= 1000) {
+      skyClockParts = getLocalClockParts(new Date(now), ipContext);
+      skyClockUpdatedAt = now;
+    }
+    const clock = skyClockParts;
+    const hour =
+      autoTimeTheme && !autoTimeTheme.checked
+        ? { morning: 8, afternoon: 14, evening: 18.5 }[theme]
+        : clock.hour + clock.minute / 60 + clock.second / 3600;
+    const progress = Math.max(0, Math.min(1, (hour - 5) / 15));
+    const sunX = W * Math.min(
+      0.94,
+      0.07 + progress * 0.86 + Math.sin(progress * Math.PI) * 0.18,
+    );
+    const sunY = H * (0.56 - Math.sin(progress * Math.PI) * 0.37);
+    const sunRadius = Math.min(36, W * 0.083);
+    const evening = theme === "evening";
+    const midday = theme === "afternoon";
+    const glowRadius = sunRadius * (evening ? 5 : midday ? 4 : 3.4);
+
+    const glow = ctx.createRadialGradient(
+      sunX,
+      sunY,
+      sunRadius * 0.5,
+      sunX,
+      sunY,
+      glowRadius,
+    );
+    glow.addColorStop(0, sunGlow);
+    glow.addColorStop(1, "rgba(255, 222, 170, 0)");
+    ctx.fillStyle = glow;
+    ctx.fillRect(
+      sunX - glowRadius,
+      sunY - glowRadius,
+      glowRadius * 2,
+      glowRadius * 2,
+    );
+
+    if (midday) {
+      ctx.save();
+      ctx.translate(sunX, sunY);
+      ctx.strokeStyle = sunGlow;
+      ctx.lineWidth = 2;
+      for (let ray = 0; ray < 12; ray++) {
+        const angle = (ray / 12) * Math.PI * 2 + timeSeconds * 0.025;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(angle) * (sunRadius + 6), Math.sin(angle) * (sunRadius + 6));
+        ctx.lineTo(Math.cos(angle) * (sunRadius + 13), Math.sin(angle) * (sunRadius + 13));
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    ctx.fillStyle = sunColor;
+    ctx.beginPath();
+    ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    const cloudCount = evening ? 2 : midday ? 3 : 4;
+    for (let index = 0; index < cloudCount; index++) {
+      const phase = (timeSeconds * (0.007 + index * 0.0011) + index * 0.39) % 1.3;
+      const x = (phase - 0.15) * W;
+      const y = H * (0.22 + (index % 3) * 0.095);
+      const scale = 0.7 + (index % 3) * 0.16;
+      drawCloud(x, y, scale, evening ? 0.58 : 0.75, cloudColor, cloudShadow);
+    }
+
+    drawBirdFlocks(theme, timeSeconds, birdColor);
+  }
+
   function draw() {
-    const dark = isDark(),
-      bg = dark ? "#08111f" : "#eaf3fb";
-    ctx.fillStyle = bg;
+    const dark = isDark();
+    const canvasTop = activePalette["--canvas-top"];
+    const canvasBottom = activePalette["--canvas-bottom"];
+    const canvasSpeck = activePalette["--canvas-speck"];
+    const canvasPaddle = activePalette["--canvas-paddle"];
+    const canvasInk = activePalette["--canvas-ink"];
+
+    ctx.fillStyle = canvasBottom;
     ctx.fillRect(0, 0, W, H);
+
     const grad = ctx.createLinearGradient(0, 0, 0, H);
-    grad.addColorStop(0, dark ? "#0d2036" : "#d9efff");
-    grad.addColorStop(1, bg);
+    grad.addColorStop(0, canvasTop);
+    grad.addColorStop(1, canvasBottom);
+
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
+
+    const theme = root.dataset.timeTheme || "morning";
+    const timeSeconds = reduceSkyMotion.matches ? 0 : performance.now() / 1000;
+    if (theme === "night") {
+      drawNightSky(
+        timeSeconds,
+        activePalette["--sky-moon"],
+        activePalette["--sky-star"],
+      );
+    } else {
+      drawDaySky(
+        theme,
+        timeSeconds,
+        activePalette["--sky-sun"],
+        activePalette["--sky-sun-glow"],
+        activePalette["--sky-cloud"],
+        activePalette["--sky-cloud-shadow"],
+        activePalette["--sky-bird"],
+      );
+    }
+
     ctx.globalAlpha = 0.22;
-    ctx.fillStyle = dark ? "#fff" : "#3979a8";
+    ctx.fillStyle = canvasSpeck;
+
     for (let i = 0; i < 22; i++) {
-      const x = (i * 83) % W,
-        y = 70 + ((i * 137) % Math.max(100, H * 0.6));
+      const x = (i * 83) % W;
+      const y = 70 + ((i * 137) % Math.max(100, H * 0.6));
+
       ctx.beginPath();
       ctx.arc(x, y, (i % 3) + 0.7, 0, Math.PI * 2);
       ctx.fill();
     }
+
     ctx.globalAlpha = 1;
+
     for (const br of S.bricks) if (br.alive) drawBrick(br, dark);
-    ctx.fillStyle = dark ? "#f4f8ff" : "#102033";
+    ctx.fillStyle = canvasPaddle;
     roundRect(
       ctx,
       S.paddle.x - S.paddle.w / 2,
@@ -1465,7 +1883,7 @@
     ctx.textAlign = "center";
     for (const f of S.floaters) {
       ctx.globalAlpha = Math.min(1, f.life / f.max);
-      ctx.fillStyle = dark ? "#fff" : "#102033";
+      ctx.fillStyle = canvasInk;
       ctx.font = '800 14px system-ui,-apple-system,"Segoe UI",sans-serif';
       ctx.fillText(f.text, f.x, f.y);
     }
@@ -1524,6 +1942,7 @@
   }
   function beep(freq, dur, type) {
     try {
+      if (localStorage.getItem("rang.soundEnabled") === "false") return;
       const A = window.AudioContext || window.webkitAudioContext;
       if (!A) return;
       const ac = beep.ac || (beep.ac = new A());
@@ -1571,31 +1990,174 @@
     passive: true,
   });
 
-  const savedAppearance = localStorage.getItem("rang.appearance") || "system";
-  document.documentElement.dataset.forcedTheme =
-    savedAppearance === "system" ? "" : savedAppearance;
+  const root = document.documentElement;
+  resetThemePreferencesForBuild(
+    localStorage,
+    import.meta.url,
+    import.meta.env.VITE_RESET_THEME_PREFERENCES === "true",
+  );
+  let savedAppearance = localStorage.getItem("rang.appearance") || "system";
+  autoTimeTheme = $("autoTimeTheme");
+  const savedAutoTime = localStorage.getItem("rang.autoTimeTheme") !== "false";
+  let themeTimer = null;
+
+  function updatePalette(theme = root.dataset.timeTheme) {
+    activePalette = applyThemePalette(
+      root,
+      theme || "morning",
+      savedAppearance,
+      matchMedia("(prefers-color-scheme: dark)").matches,
+    );
+  }
+
   if ($("appearanceSelect")) {
     $("appearanceSelect").value = savedAppearance;
-    $("appearanceSelect").onchange = (e) => {
-      const v = e.target.value;
-      localStorage.setItem("rang.appearance", v);
-      document.documentElement.dataset.forcedTheme = v === "system" ? "" : v;
+    $("appearanceSelect").addEventListener("change", (event) => {
+      savedAppearance = event.target.value;
+      localStorage.setItem("rang.appearance", savedAppearance);
+      updatePalette();
       draw();
-    };
+    });
   }
+
   if ($("languageSelect")) {
     $("languageSelect").value = localStorage.getItem("rang.language") || "en";
-    $("languageSelect").onchange = (e) => {
-      lang = e.target.value;
+    $("languageSelect").addEventListener("change", (event) => {
+      lang = event.target.value;
       localStorage.setItem("rang.language", lang);
       setText();
-      renderLevels();
-    };
+      renderLevels(false);
+    });
   }
+
+  function applyTimeTheme(theme, redraw = true) {
+    if (!THEME_NAMES.includes(theme)) return;
+
+    updatePalette(theme);
+    document.querySelectorAll("[data-time-theme]").forEach((button) => {
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.timeTheme === theme),
+      );
+    });
+    if (redraw) draw();
+  }
+
+  function clearThemeTimer() {
+    if (themeTimer !== null) {
+      clearTimeout(themeTimer);
+      themeTimer = null;
+    }
+  }
+
+  function scheduleThemeUpdate() {
+    clearThemeTimer();
+    if (!autoTimeTheme.checked || document.hidden) return;
+
+    const untilNextMinute = 60_000 - (Date.now() % 60_000);
+    themeTimer = setTimeout(() => {
+      themeTimer = null;
+      refreshAutomaticTheme();
+    }, untilNextMinute + 20);
+  }
+
+  function refreshAutomaticTheme() {
+    if (!autoTimeTheme.checked) return;
+
+    applyTimeTheme(resolveAdaptiveTheme(new Date(), ipContext));
+    scheduleThemeUpdate();
+  }
+
+  function updateThemeFromIpContext(context) {
+    ipContext = context;
+    if (autoTimeTheme.checked) refreshAutomaticTheme();
+  }
+
+  autoTimeTheme.checked = savedAutoTime;
+  autoTimeTheme.addEventListener("change", () => {
+    localStorage.setItem("rang.autoTimeTheme", String(autoTimeTheme.checked));
+    if (autoTimeTheme.checked) refreshAutomaticTheme();
+    else clearThemeTimer();
+  });
+
+  document.querySelectorAll("[data-time-theme]").forEach((button) => {
+    button.addEventListener("click", () => {
+      autoTimeTheme.checked = false;
+      localStorage.setItem("rang.autoTimeTheme", "false");
+      localStorage.setItem("rang.timeTheme", button.dataset.timeTheme);
+      clearThemeTimer();
+      applyTimeTheme(button.dataset.timeTheme);
+    });
+  });
+
+  const savedManualTheme = localStorage.getItem("rang.timeTheme");
+  const initialTheme =
+    savedAutoTime || !THEME_NAMES.includes(savedManualTheme)
+      ? resolveAdaptiveTheme(new Date(), null)
+      : savedManualTheme;
+  applyTimeTheme(initialTheme, false);
+
+  // Refresh on return from backgrounding; one minute-aligned timer handles transitions.
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) clearThemeTimer();
+    else if (autoTimeTheme.checked) refreshAutomaticTheme();
+    else updatePalette();
+  });
+  window.addEventListener("pageshow", () => {
+    if (autoTimeTheme.checked) refreshAutomaticTheme();
+  });
+  window.addEventListener("pagehide", clearThemeTimer);
+
+  // Optional decorative accent preference
+  const natureAccent = $("natureAccent");
+
+  if (natureAccent) {
+    natureAccent.value = localStorage.getItem("rang.natureAccent") || "none";
+
+    root.dataset.natureAccent = natureAccent.value;
+
+    natureAccent.addEventListener("change", () => {
+      root.dataset.natureAccent = natureAccent.value;
+      localStorage.setItem("rang.natureAccent", natureAccent.value);
+      draw();
+    });
+  }
+
+  // Sound effects toggle
+  const soundEnabled = $("soundEnabled");
+  const savedSound = localStorage.getItem("rang.soundEnabled");
+
+  if (soundEnabled) {
+    soundEnabled.checked = savedSound !== "false";
+
+    soundEnabled.addEventListener("change", () => {
+      localStorage.setItem("rang.soundEnabled", String(soundEnabled.checked));
+    });
+  }
+
   resize();
   setText();
   renderLevels();
   show("menu");
   setTimeout(() => splash.classList.remove("active"), 900);
-  detectLanguage();
+  let lastAmbientDraw = 0;
+  function ambientLoop(timestamp) {
+    if (
+      !document.hidden &&
+      !S.running &&
+      timestamp - lastAmbientDraw >= 33
+    ) {
+      draw();
+      lastAmbientDraw = timestamp;
+    }
+    requestAnimationFrame(ambientLoop);
+  }
+  requestAnimationFrame(ambientLoop);
+
+  // Resolve immediately from system time; use device location only when granted,
+  // then IPWHO if device location is unavailable or blocked.
+  const contextRequest = getPreferredThemeContext();
+  void contextRequest.then(updateThemeFromIpContext);
+  void detectLanguage(contextRequest);
+  scheduleThemeUpdate();
 })();

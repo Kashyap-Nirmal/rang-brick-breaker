@@ -7,6 +7,7 @@
     --muted: #53657a;
     --line: rgba(19, 32, 51, .14);
     --accent: #1769e0;
+    --theme-glow: rgba(23, 105, 224, .14);
     --shadow: 0 18px 50px rgba(20, 55, 90, .14);
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif
 }
@@ -155,13 +156,13 @@ a {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(180deg, rgba(238, 245, 251, .94), rgba(238, 245, 251, .8))
-}
-
-@media(prefers-color-scheme:dark) {
-    #menu {
-        background: linear-gradient(180deg, rgba(8, 17, 31, .95), rgba(8, 17, 31, .84))
-    }
+    background:
+        radial-gradient(ellipse at 50% 32%, var(--theme-glow), transparent 62%),
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--bg) 78%, transparent),
+            color-mix(in srgb, var(--bg) 46%, transparent)
+        )
 }
 
 .home-art {
@@ -183,41 +184,41 @@ a {
 .home-art i:nth-child(2) {
     left: 10%;
     top: 38%;
-    background: #ff5d73
+    background: #398de0
 }
 
 .home-art i:nth-child(3) {
     left: 28%;
     top: 16%;
-    background: #ffd43b;
+    background: #70b5f1;
     animation-delay: .15s
 }
 
 .home-art i:nth-child(4) {
     left: 45%;
     top: 42%;
-    background: #35c978;
+    background: #256fc3;
     animation-delay: .3s
 }
 
 .home-art i:nth-child(5) {
     left: 62%;
     top: 20%;
-    background: #35bdf5;
+    background: #4ea5ec;
     animation-delay: .45s
 }
 
 .home-art i:nth-child(6) {
     left: 78%;
     top: 46%;
-    background: #f05bd8;
+    background: #5c9fe2;
     animation-delay: .6s
 }
 
 .home-art i:nth-child(7) {
     left: 39%;
     top: 0;
-    background: #9b63ff;
+    background: #83bdf0;
     animation-delay: .75s
 }
 
@@ -801,6 +802,7 @@ h1 {
     --muted: #53657a;
     --line: rgba(19, 32, 51, .14);
     --accent: #1769e0;
+    --theme-glow: rgba(23, 105, 224, .14);
     --shadow: 0 18px 50px rgba(20, 55, 90, .14)
 }
 
@@ -813,6 +815,7 @@ h1 {
     --muted: #a8b7c9;
     --line: rgba(243, 247, 252, .14);
     --accent: #66a3ff;
+    --theme-glow: rgba(102, 163, 255, .16);
     --shadow: 0 18px 50px rgba(0, 0, 0, .34)
 }
 
@@ -880,6 +883,215 @@ h1 {
     color: var(--text)
 }
 
+
+/* Settings header and close control */
+.settings-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.settings-header h2 {
+  margin: 0 0 6px;
+}
+
+.settings-eyebrow,
+.settings-group-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  color: var(--accent);
+}
+
+.settings-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.settings-close {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.settings-close:focus-visible,
+.personalise-section summary:focus-visible,
+.time-theme-grid button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Collapsible personalisation group */
+.personalise-section {
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.personalise-section > summary {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 14px;
+  cursor: pointer;
+  list-style: none;
+  background: var(--surface);
+}
+
+.personalise-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+.personalise-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  font-size: 19px;
+}
+
+.personalise-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.personalise-copy strong {
+  font-size: 13px;
+}
+
+.personalise-copy small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.personalise-chevron {
+  color: var(--muted);
+  font-size: 21px;
+  transition: transform .2s ease;
+}
+
+.personalise-section[open] .personalise-chevron {
+  transform: rotate(180deg);
+}
+
+.personalise-content {
+  padding: 4px 14px 14px;
+}
+
+.settings-group-label {
+  margin: 16px 0 7px;
+}
+
+.setting-row {
+  align-items: center;
+  gap: 12px;
+}
+
+.setting-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Four equal options, always two columns */
+.time-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.time-theme-grid button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  min-height: 60px;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.time-theme-grid button > span:first-child {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  font-size: 17px;
+}
+
+.time-theme-grid button > span:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.time-theme-grid button b {
+  font-size: 11px;
+}
+
+.time-theme-grid button small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.time-theme-grid button[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+}
+
+.settings-privacy {
+  margin: 14px 0 0;
+  padding: 11px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .personalise-chevron {
+    transition: none;
+  }
+}
+
 #pauseDialog {
     z-index: 100
 }
@@ -900,7 +1112,7 @@ h1 {
 }
 
 .level-unlocked {
-  color: #35c978;
+  color: var(--accent);
 }
 
 .level-lock {

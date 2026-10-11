@@ -212,57 +212,124 @@
 
         </section>
 
-        <section id="settings" class="screen">
 
-            <div class="about-card settings-card">
+<section id="settings" class="screen">
+  <div class="about-card settings-card">
+    <header class="settings-header">
+      <div>
+        <p class="settings-eyebrow">RANG</p>
+        <h2 data-i18n="settingsTitle">Settings</h2>
+        <p class="settings-description" data-i18n="settingsDescription">
+          Make the game feel right for you.
+        </p>
+      </div>
 
-                <div class="about-logo">⚙</div>
+      <button
+        id="settingsCloseBtn"
+        class="settings-close"
+        type="button"
+        aria-label="Close settings"
+        title="Close"
+      >×</button>
+    </header>
 
-                <div class="result-kicker">RANG</div>
+    <details class="personalise-section">
+      <summary>
+        <span class="personalise-icon" aria-hidden="true">✦</span>
+        <span class="personalise-copy">
+          <strong data-i18n="personaliseTitle">Personalise your Rang</strong>
+          <small data-i18n="personaliseDescription">Themes, language and sound</small>
+        </span>
+        <span class="personalise-chevron" aria-hidden="true">⌄</span>
+      </summary>
 
-                <h2>Settings</h2>
+      <div class="personalise-content">
+        <p class="settings-group-label" data-i18n="appearance">APPEARANCE</p>
 
-                <div class="setting-row">
+        <div class="setting-row">
+          <div>
+            <b id="baseAppearanceLabel" data-i18n="baseAppearance">Base appearance</b>
+            <span data-i18n="appearanceDescription">Follow your device or choose a fixed mode.</span>
+          </div>
+          <select id="appearanceSelect" aria-labelledby="baseAppearanceLabel">
+            <option value="system" data-i18n="system">System</option>
+            <option value="light" data-i18n="light">Light</option>
+            <option value="dark" data-i18n="dark">Dark</option>
+          </select>
+        </div>
 
-                    <div>
-                        <b data-i18n="appearance">APPEARANCE</b>
-                        <span>Light, dark or follow the device.</span>
-                    </div>
+        <div class="setting-row">
+          <div>
+            <b id="languageLabel" data-i18n="language">Language</b>
+            <span data-i18n="languageDescription">Choose your preferred language.</span>
+          </div>
+          <select id="languageSelect" aria-labelledby="languageLabel">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="gu">ગુજરાતી</option>
+            <option value="ja">日本語</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
 
-                    <select id="appearanceSelect">
-                        <option value="system">System</option>
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                    </select>
+        <p class="settings-group-label" data-i18n="timeThemeTitle">TIME-OF-DAY THEME</p>
 
-                </div>
+        <div id="themeOptions" class="time-theme-grid" role="group"
+             aria-label="Time-of-day theme">
+          <button type="button" data-time-theme="morning">
+            <span aria-hidden="true">☀</span>
+            <span><b data-i18n="morning">Morning</b><small data-i18n="morningDescription">Fresh and airy</small></span>
+          </button>
+          <button type="button" data-time-theme="afternoon">
+            <span aria-hidden="true">◉</span>
+            <span><b data-i18n="afternoon">Afternoon</b><small data-i18n="afternoonDescription">Bright and clear</small></span>
+          </button>
+          <button type="button" data-time-theme="evening">
+            <span aria-hidden="true">◒</span>
+            <span><b data-i18n="evening">Evening</b><small data-i18n="eveningDescription">Warm and soft</small></span>
+          </button>
+          <button type="button" data-time-theme="night">
+            <span aria-hidden="true">☾</span>
+            <span><b data-i18n="night">Night</b><small data-i18n="nightDescription">Quiet and deep</small></span>
+          </button>
+        </div>
 
-                <div class="setting-row">
+        <div class="setting-row">
+          <div>
+            <b id="autoTimeThemeLabel" data-i18n="automaticTheme">Automatic theme</b>
+            <span data-i18n="automaticThemeDescription">Follow local time and available daylight context.</span>
+          </div>
+          <input id="autoTimeTheme" type="checkbox" checked aria-labelledby="autoTimeThemeLabel" />
+        </div>
 
-                    <div>
-                        <b data-i18n="language">LANGUAGE</b>
-                        <span>Choose the language used by Rang.</span>
-                    </div>
+        <div class="setting-row">
+          <div>
+            <b id="natureAccentLabel" data-i18n="natureTitle">Nature accents</b>
+            <span data-i18n="natureDescription">Optional decorative colour variations.</span>
+          </div>
+          <select id="natureAccent" aria-labelledby="natureAccentLabel">
+            <option value="none">Off</option>
+            <option value="blossom">Blossom</option>
+            <option value="aurora">Aurora</option>
+          </select>
+        </div>
 
-                    <select id="languageSelect">
-                        <option value="en">English</option>
-                        <option value="hi">हिन्दी</option>
-                        <option value="gu">ગુજરાતી</option>
-                        <option value="ja">日本語</option>
-                        <option value="es">Español</option>
-                    </select>
+        <div class="setting-row">
+          <div>
+            <b id="soundEnabledLabel" data-i18n="soundTitle">Game sound effects</b>
+            <span data-i18n="soundDescription">Enable or mute the game's sound effects.</span>
+          </div>
+          <input id="soundEnabled" type="checkbox" checked aria-labelledby="soundEnabledLabel" />
+        </div>
 
-                </div>
+        <p class="settings-privacy" data-i18n="themePrivacy">
+          Rang may request approximate timezone and location context from IPWHO using your public IP. No location permission is needed; this context stays in memory only.
+        </p>
+      </div>
+    </details>
+  </div>
+</section>
 
-                </br>
-
-                <button id="settingsCloseBtn" class="primary">
-                    CLOSE
-                </button>
-
-            </div>
-
-        </section>
 
         <section id="pauseDialog" class="screen overlay-screen">
 
@@ -345,8 +412,7 @@
 
     </main>
 
-    <script src="src/env.js"></script>
-    <script src="src/main.js"></script>
+    <script type="module" src="src/main.js"></script>
 
 </body>
 
