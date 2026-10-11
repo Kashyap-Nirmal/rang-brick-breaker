@@ -326,7 +326,7 @@
     },
   };
 
-  const FEEDBACK_CONFIG = {
+  const GITHUB_CONFIG = {
     owner: "Kashyap-Nirmal",
     repo: "rang-brick-breaker",
   };
@@ -397,6 +397,8 @@
     $("feedbackSaveBtn").textContent = t("copy");
     $("feedbackCloseBtn").textContent = t("close");
     $("githubLink").textContent = t("github");
+    $("githubLink").href =
+      `https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`;
     $("levelLabel").textContent = t("level");
     $("scoreLabel").textContent = t("score");
     $("bestLabel").textContent = t("best");
@@ -540,8 +542,8 @@
     ].join("\n");
 
     const issueUrl =
-      `https://github.com/${FEEDBACK_CONFIG.owner}/` +
-      `${FEEDBACK_CONFIG.repo}/issues/new?` +
+      `https://github.com/${GITHUB_CONFIG.owner}/` +
+      `${GITHUB_CONFIG.repo}/issues/new?` +
       `title=${encodeURIComponent(title)}&` +
       `body=${encodeURIComponent(body)}`;
 
